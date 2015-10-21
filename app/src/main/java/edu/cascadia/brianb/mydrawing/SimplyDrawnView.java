@@ -10,6 +10,8 @@ import android.graphics.Path;
 import android.graphics.PathDashPathEffect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -45,17 +47,47 @@ public class SimplyDrawnView extends View {
         //Draw red line
         mPaint.setColor(Color.RED); mPaint.setStrokeWidth(10);
 
+        //api: drawLine(float startX, float startY, float stopX, float stopY, Paint paint)
+        canvas.drawLine(mWidth/2, mHeight/2, mWidth, mHeight, mPaint);
         //Draw green lines
+        //draw five green lines
 
+        int alpha = 255;
+        for(int i=0; i < 5; i++){
+            mPaint.setColor(Color.GREEN); mPaint.setStrokeWidth(10);
+            //canvas.drawLine(0, 0, mWidth, 0, mPaint);
+            mPaint.setAlpha(alpha);
+            alpha = 255 - 30;
+            canvas.drawLine(20, 20+i*50, mWidth, 20+i*50, mPaint);
+        }
 
         //Draw Text
+        canvas.drawText("This is drawing text", 100f, 100f, mPaint);
 
         //Draw Text on a Path
+        mPath.addArc(new RectF(100f, 150f, 400f, 300f), 0f, 230f);
+        canvas.drawTextOnPath("some text on path", mPath, 0, 0, mPaint);
+
+        //draw a circle
+        //mWidth/2, mHeight/2, mWidth, mHeight
+        float radius = mWidth/3;
+        canvas.drawCircle(mWidth/2, mHeight/2, radius, mPaint);
 
         //Draw filled, opaque, and open ovals
+        ShapeDrawable s = new ShapeDrawable(new OvalShape());
+        s.setBounds(0, 0, 200, 300);
+        s.draw(canvas);
 
         //Draw bee bitmap
-        Drawable b = getResources().getDrawable(R.drawable.bee,null);
-
+        //cannot use getDrawable my device does not support api 21
+//        Drawable b = getResources().getDrawable(R.drawable.bee,null);
+//
+//        int x=50, y=200;
+//        b.setBounds(x, y, x+b.getBounds().right, y+b.getBounds().bottom);
+//        b.draw(canvas);
+        int x=50, y=200;
+//        b.setBounds(x, y, x+b.getBounds().right, y+b.getBounds().bottom);
+        Bitmap beeBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bee);
+        canvas.drawBitmap(beeBitmap, x, y, mPaint);
     }
 }
